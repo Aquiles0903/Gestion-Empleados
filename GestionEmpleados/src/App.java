@@ -5,16 +5,47 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Esta es la clase principal que corre todo el programa en la consola.
+ * Tiene el menú interactivo para crear empleados, deptos, proyectos, calcular sueldos y guardar todo.
+ */
 public class App {
+    /**
+     * El archivo donde guardamos la base de datos (datos.dat).
+     */
     private static final String ARCHIVO_DATOS = "datos.dat";
+
+    /**
+     * La base de datos en memoria donde guardamos todo mientras corre el programa.
+     */
     private static GestionDatos datosEmpresa;
+
+    /**
+     * El scanner que lee lo que el usuario escribe en el teclado.
+     */
     private static Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Constructor vacío y privado para que nadie intente crear un objeto de esta clase.
+     */
+    private App() {
+        // Constructor vacío para prevenir instanciación.
+    }
+
+    /**
+     * El main que arranca todo el programa. Carga los datos guardados y abre el menú.
+     *
+     * @param args Argumentos de consola (no los usamos).
+     */
     public static void main(String[] args) {
         cargarDatos();
         mostrarMenu();
     }
 
+    /**
+     * Carga los datos guardados del archivo. Si no hay archivo o da error,
+     * crea unos datos por defecto de prueba.
+     */
     private static void cargarDatos() {
         File archivo = new File(ARCHIVO_DATOS);
         if (archivo.exists()) {
@@ -31,6 +62,10 @@ public class App {
         }
     }
 
+    /**
+     * Crea datos de prueba (un gerente, un jefe, programadores, depto IT, proyecto)
+     * para no empezar en blanco si es la primera vez.
+     */
     private static void inicializarDatosPorDefecto() {
         datosEmpresa = new GestionDatos();
         try {
@@ -79,6 +114,9 @@ public class App {
         }
     }
 
+    /**
+     * Guarda todo en el archivo datos.dat para que no se pierda al cerrar el programa.
+     */
     private static void guardarDatos() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ARCHIVO_DATOS))) {
             oos.writeObject(datosEmpresa);
@@ -88,6 +126,9 @@ public class App {
         }
     }
 
+    /**
+     * Dibuja el menú con las 13 opciones en la pantalla y lee qué número pone el usuario.
+     */
     private static void mostrarMenu() {
         int opcion = 0;
         do {
@@ -116,6 +157,11 @@ public class App {
         } while (opcion != 13);
     }
 
+    /**
+     * Usa un switch para mandar al usuario al método que corresponde según la opción elegida.
+     *
+     * @param opcion La opción que eligió el usuario.
+     */
     private static void procesarOpcion(int opcion) {
         try {
             switch (opcion) {
@@ -142,6 +188,10 @@ public class App {
         }
     }
 
+    /**
+     * Pide los datos de un empleado por teclado y lo mete en la lista.
+     * Sabe distinguir si es programador, jefe o gerente para pedir los datos correctos.
+     */
     private static void agregarEmpleado() {
         System.out.print("Nombre: ");
         String nombre = scanner.nextLine();
@@ -176,6 +226,9 @@ public class App {
         }
     }
 
+    /**
+     * Busca a un empleado por su número ID o su nombre y lo muestra por pantalla.
+     */
     private static void buscarEmpleado() {
         System.out.println("Buscar por: 1. ID  2. Nombre");
         int tipo = Integer.parseInt(scanner.nextLine());
@@ -196,6 +249,9 @@ public class App {
         }
     }
 
+    /**
+     * Muestra la lista de todos los empleados que tenemos registrados.
+     */
     private static void listarEmpleados() {
         List<Empleado> emps = datosEmpresa.getEmpleados();
         if (emps.isEmpty()) {
@@ -208,6 +264,11 @@ public class App {
         }
     }
 
+    /**
+     * Te deja cambiar los datos de un empleado por ID (nombre, sueldo y cosas específicas del tipo de puesto).
+     *
+     * @throws ElementoNoEncontradoException Si no existe el empleado con el ID que pusimos.
+     */
     private static void actualizarEmpleado() throws ElementoNoEncontradoException {
         System.out.print("Ingrese ID del empleado a actualizar: ");
         int id = Integer.parseInt(scanner.nextLine());
@@ -244,6 +305,9 @@ public class App {
         System.out.println("Empleado actualizado.");
     }
 
+    /**
+     * Pide un ID de empleado y lo borra del sistema limpiando sus referencias de proyectos/departamentos.
+     */
     private static void eliminarEmpleado() {
         System.out.print("Ingrese ID del empleado a eliminar: ");
         int id = Integer.parseInt(scanner.nextLine());
@@ -255,6 +319,9 @@ public class App {
         }
     }
 
+    /**
+     * Pide los datos para crear un proyecto y lo asigna a un gerente para vigilarlo.
+     */
     private static void crearProyecto() {
         System.out.print("Nombre del Proyecto: ");
         String nom = scanner.nextLine();
@@ -293,6 +360,9 @@ public class App {
         }
     }
 
+    /**
+     * Muestra la lista de los proyectos que hay creados con sus presupuestos.
+     */
     private static void listarProyectos() {
         List<Proyecto> proys = datosEmpresa.getProyectos();
         if (proys.isEmpty()) {
@@ -304,6 +374,9 @@ public class App {
         }
     }
 
+    /**
+     * Le da presupuesto de plata a un proyecto sacándolo de la plata del gerente.
+     */
     private static void asignarPresupuesto() {
         System.out.print("Ingrese ID del proyecto: ");
         int idProy = Integer.parseInt(scanner.nextLine());
@@ -327,6 +400,9 @@ public class App {
         }
     }
 
+    /**
+     * Crea un departamento nuevo pidiendo su nombre por pantalla.
+     */
     private static void crearDepartamento() {
         System.out.print("Nombre del Departamento: ");
         String nom = scanner.nextLine();
@@ -336,6 +412,9 @@ public class App {
         System.out.println("Departamento creado con ID: " + id);
     }
 
+    /**
+     * Muestra la lista de todos los departamentos y quién es su jefe a cargo.
+     */
     private static void listarDepartamentos() {
         List<Departamento> deps = datosEmpresa.getDepartamentos();
         if (deps.isEmpty()) {
@@ -348,6 +427,9 @@ public class App {
         }
     }
 
+    /**
+     * Pide una fecha y muestra la nómina de todos los empleados para ese periodo.
+     */
     private static void calcularNominaTotal() {
         List<Empleado> emps = datosEmpresa.getEmpleados();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
