@@ -192,7 +192,7 @@ public class App {
      * Pide los datos de un empleado por teclado y lo mete en la lista.
      * Sabe distinguir si es programador, jefe o gerente para pedir los datos correctos.
      */
-    private static void agregarEmpleado() {
+    private static void agregarEmpleado() throws ElementoDuplicadoException {
         System.out.print("Nombre: ");
         String nombre = scanner.nextLine();
         System.out.print("Salario Base: ");
@@ -342,11 +342,10 @@ public class App {
         }
 
         int id = datosEmpresa.generarIdProyecto();
-        Proyecto p = new Proyecto(id, nom, desc, fechaInicio, fechaFin);
-        
-        System.out.print("Ingrese ID del Gerente a cargo: ");
-        int idGerente = Integer.parseInt(scanner.nextLine());
         try {
+            Proyecto p = new Proyecto(id, nom, desc, fechaInicio, fechaFin);
+            System.out.print("Ingrese ID del Gerente a cargo: ");
+            int idGerente = Integer.parseInt(scanner.nextLine());
             Empleado emp = datosEmpresa.buscarEmpleado(idGerente);
             if (emp instanceof Gerente) {
                 ((Gerente) emp).agregarProyecto(p);
@@ -403,7 +402,7 @@ public class App {
     /**
      * Crea un departamento nuevo pidiendo su nombre por pantalla.
      */
-    private static void crearDepartamento() {
+    private static void crearDepartamento() throws ElementoDuplicadoException {
         System.out.print("Nombre del Departamento: ");
         String nom = scanner.nextLine();
         int id = datosEmpresa.generarIdDepartamento();

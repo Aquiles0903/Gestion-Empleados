@@ -54,8 +54,17 @@ public class Gerente extends Empleado {
      * Guarda un departamento en la lista de los que vigila este gerente.
      *
      * @param depto El departamento nuevo a vigilar.
+     * @throws ElementoDuplicadoException Si el departamento ya está supervisado por este gerente.
      */
-    public void agregarDepto(Departamento depto) {
+    public void agregarDepto(Departamento depto) throws ElementoDuplicadoException {
+        if (depto == null) {
+            return;
+        }
+        for (Departamento d : deptoSupervisados) {
+            if (d.getId() == depto.getId()) {
+                throw new ElementoDuplicadoException("El departamento ya está supervisado por este gerente.");
+            }
+        }
         this.deptoSupervisados.add(depto);
     }
 

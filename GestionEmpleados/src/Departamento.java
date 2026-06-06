@@ -63,11 +63,18 @@ public class Departamento implements Serializable {
      * Mete un empleado a la lista del departamento si no es null y si no lo habíamos metido ya.
      *
      * @param emp El empleado a meter.
+     * @throws ElementoDuplicadoException Si el empleado ya está en el departamento.
      */
-    public void agregarEmpleado(Empleado emp) {
-        if (emp != null && !empleados.contains(emp)) {
-            empleados.add(emp);
+    public void agregarEmpleado(Empleado emp) throws ElementoDuplicadoException {
+        if (emp == null) {
+            return;
         }
+        for (Empleado e : empleados) {
+            if (e.getId() == emp.getId()) {
+                throw new ElementoDuplicadoException("El empleado ya está en el departamento.");
+            }
+        }
+        empleados.add(emp);
     }
 
     /**

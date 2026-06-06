@@ -58,7 +58,16 @@ public class Proyecto implements Serializable {
      * @param fechaInicio    Cuándo empieza.
      * @param fechaFinal     Cuándo se termina.
      */
-    public Proyecto(int id, String nombreProyecto, String descripcion, LocalDate fechaInicio, LocalDate fechaFinal) {
+    public Proyecto(int id, String nombreProyecto, String descripcion, LocalDate fechaInicio, LocalDate fechaFinal) throws FechaInvalidaException {
+        if (fechaInicio == null) {
+            throw new FechaInvalidaException("La fecha de inicio no puede ser nula.");
+        }
+        if (fechaFinal == null) {
+            throw new FechaInvalidaException("La fecha de finalización no puede ser nula.");
+        }
+        if (fechaFinal.isBefore(fechaInicio)) {
+            throw new FechaInvalidaException("La fecha de finalización no puede ser anterior a la fecha de inicio.");
+        }
         this.id = id;
         this.nombreProyecto = nombreProyecto;
         this.descripcion = descripcion;
@@ -72,11 +81,18 @@ public class Proyecto implements Serializable {
      * Añade un empleado al proyecto si no es null y si no estaba ya metido.
      *
      * @param emp El empleado que vamos a sumar.
+     * @throws ElementoDuplicadoException Si el empleado ya estaba asignado a este proyecto.
      */
-    public void agregarEmpleado(Empleado emp) {
-        if (emp != null && !empleadosAsoc.contains(emp)) {
-            empleadosAsoc.add(emp);
+    public void agregarEmpleado(Empleado emp) throws ElementoDuplicadoException {
+        if (emp == null) {
+            return;
         }
+        for (Empleado e : empleadosAsoc) {
+            if (e.getId() == emp.getId()) {
+                throw new ElementoDuplicadoException("El empleado ya está asignado a este proyecto.");
+            }
+        }
+        empleadosAsoc.add(emp);
     }
 
     /**
@@ -156,7 +172,13 @@ public class Proyecto implements Serializable {
      *
      * @param fechaInicio La fecha nueva de inicio.
      */
-    public void setFechaInicio(LocalDate fechaInicio) {
+    public void setFechaInicio(LocalDate fechaInicio) throws FechaInvalidaException {
+        if (fechaInicio == null) {
+            throw new FechaInvalidaException("La fecha de inicio no puede ser nula.");
+        }
+        if (this.fechaFinal != null && this.fechaFinal.isBefore(fechaInicio)) {
+            throw new FechaInvalidaException("La fecha de inicio no puede ser posterior a la fecha de finalización.");
+        }
         this.fechaInicio = fechaInicio;
     }
 
@@ -174,7 +196,13 @@ public class Proyecto implements Serializable {
      *
      * @param fechaFinal La nueva fecha final.
      */
-    public void setFechaFinal(LocalDate fechaFinal) {
+    public void setFechaFinal(LocalDate fechaFinal) throws FechaInvalidaException {
+        if (fechaFinal == null) {
+            throw new FechaInvalidaException("La fecha de finalización no puede ser nula.");
+        }
+        if (this.fechaInicio != null && fechaFinal.isBefore(this.fechaInicio)) {
+            throw new FechaInvalidaException("La fecha de finalización no puede ser anterior a la fecha de inicio.");
+        }
         this.fechaFinal = fechaFinal;
     }
 

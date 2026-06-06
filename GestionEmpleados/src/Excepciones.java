@@ -39,3 +39,18 @@ class ElementoNoEncontradoException extends Exception {
         super(message);
     }
 }
+
+/**
+ * Excepción que salta cuando una fecha no es válida (por ejemplo, fecha de fin anterior a fecha de inicio).
+ */
+class FechaInvalidaException extends Exception {
+    /**
+     * Constructor que recibe el mensaje de error.
+     *
+     * @param message Mensaje detallando por qué la fecha no es válida.
+     */
+    public FechaInvalidaException(String message) {
+        super(message);
+    }
+}
+

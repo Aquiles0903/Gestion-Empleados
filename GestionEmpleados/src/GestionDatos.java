@@ -88,8 +88,17 @@ public class GestionDatos implements Serializable {
      * Guarda un empleado en la lista de empleados de la empresa.
      *
      * @param emp El empleado a agregar.
+     * @throws ElementoDuplicadoException Si el empleado ya está registrado.
      */
-    public void agregarEmpleado(Empleado emp) {
+    public void agregarEmpleado(Empleado emp) throws ElementoDuplicadoException {
+        if (emp == null) {
+            return;
+        }
+        for (Empleado e : empleados) {
+            if (e.getId() == emp.getId()) {
+                throw new ElementoDuplicadoException("El empleado ya existe en el sistema.");
+            }
+        }
         empleados.add(emp);
     }
     
@@ -166,8 +175,17 @@ public class GestionDatos implements Serializable {
      * Guarda un proyecto en la lista general del sistema.
      *
      * @param proy El proyecto a meter.
+     * @throws ElementoDuplicadoException Si el proyecto ya está registrado.
      */
-    public void agregarProyecto(Proyecto proy) {
+    public void agregarProyecto(Proyecto proy) throws ElementoDuplicadoException {
+        if (proy == null) {
+            return;
+        }
+        for (Proyecto p : proyectos) {
+            if (p.getId() == proy.getId()) {
+                throw new ElementoDuplicadoException("El proyecto ya existe en el sistema.");
+            }
+        }
         proyectos.add(proy);
     }
 
@@ -200,8 +218,17 @@ public class GestionDatos implements Serializable {
      * Guarda un departamento en la lista general de la empresa.
      *
      * @param dep El departamento a meter.
+     * @throws ElementoDuplicadoException Si el departamento ya está registrado.
      */
-    public void agregarDepartamento(Departamento dep) {
+    public void agregarDepartamento(Departamento dep) throws ElementoDuplicadoException {
+        if (dep == null) {
+            return;
+        }
+        for (Departamento d : departamentos) {
+            if (d.getId() == dep.getId()) {
+                throw new ElementoDuplicadoException("El departamento ya existe en el sistema.");
+            }
+        }
         departamentos.add(dep);
     }
 
